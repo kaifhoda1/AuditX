@@ -1,0 +1,25 @@
+# Client data - NEVER commit
+clients/*
+!clients/.gitkeep
+
+# Framework PDFs (large files)
+frameworks/*.pdf
+frameworks/chroma_db/
+
+# Models (too large for GitHub)
+models/*
+
+# Output reports (contain client info)
+outputs/*
+
+# Python cache
+__pycache__/
+*.pyc
+.env
+
+# Virtual environment
+venv/
+
+# System files
+.DS_Store
+*.log
