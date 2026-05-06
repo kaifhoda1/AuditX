@@ -1,0 +1,96 @@
+import ollama
+import chromadb
+import os
+
+CHROMA_PATH = "chroma_db"
+MODEL = "mistral"
+
+FRAMEWORK_NAMES = {
+    "dpdp": "Digital Personal Data Protection Act 2023 & Rules 2025 (India)",
+    "gdpr": "General Data Protection Regulation (GDPR)",
+    "eu_ai_act": "EU Artificial Intelligence Act 2024",
+    "nist": "NIST Special Publication 800-53 Rev 5",
+    "rbi_digital": "RBI Master Direction on Digital Payment Security Controls",
+}
+
+def load_constitution():
+    path = "constitution.txt"
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            return f.read()
+    return ""
+
+def retrieve_context(query, framework, n_results=5):
+    client = chromadb.PersistentClient(path=CHROMA_PATH)
+    try:
+        collection = client.get_collection(name=framework)
+    except Exception:
+        return ""
+    results = collection.query(query_texts=[query], n_results=n_results)
+    chunks = results["documents"][0] if results["documents"] else []
+    return "\n\n---\n\n".join(chunks)
+
+def analyze_policy(policy_text, frameworks):
+    constitution = load_constitution()
+    results = {}
+    for framework in frameworks:
+        framework_name = FRAMEWORK_NAMES.get(framework, framework)
+        print(f"  Analyzing against {framework_name}...")
+        context = retrieve_context(policy_text[:500], framework)
+        if not context:
+            results[framework] = {"framework_name": framework_name, "error": "No framework data found."}
+            continue
+        prompt = f"""You are AuditX, a GRC compliance analysis tool.
+
+SYSTEM RULES:
+{constitution}
+
+FRAMEWORK: {framework_name}
+
+RELEVANT FRAMEWORK CLAUSES:
+{context}
+
+COMPANY POLICY DOCUMENT:
+{policy_text[:3000]}
+
+Analyze the company policy against the framework clauses above.
+Respond in this exact format:
+
+COMPLIANCE SCORE: [0-100]
+
+PASSED CHECKS:
+- [list each requirement the policy satisfies]
+
+FAILED CHECKS:
+- [list each requirement the policy fails or is missing]
+
+GAP ANALYSIS:
+- [describe each gap clearly]
+
+RECOMMENDED FIXES:
+- [specific actionable fix for each gap]
+
+DISCLAIMER: DRAFT - Awaiting Auditor Review. This is AI-assisted analysis, not legal advice."""
+        try:
+            response = ollama.chat(model=MODEL, messages=[{"role": "user", "content": prompt}])
+            results[framework] = {"framework_name": framework_name, "analysis": response["message"]["content"]}
+        except Exception as e:
+            results[framework] = {"framework_name": framework_name, "error": f"Ollama error: {str(e)}"}
+    return results
+
+if __name__ == "__main__":
+    sample_policy = """
+    Our company collects user email addresses and phone numbers for account registration.
+    We store data on our servers. Users can request deletion by emailing support.
+    We do not share data with third parties. We use cookies on our website.
+    """
+    print("=== AuditX Analyzer Test ===\n")
+    results = analyze_policy(sample_policy, ["dpdp", "gdpr"])
+    for fw, result in results.items():
+        print(f"\n{'='*50}")
+        print(f"Framework: {result['framework_name']}")
+        print("="*50)
+        if "error" in result:
+            print(f"ERROR: {result['error']}")
+        else:
+            print(result["analysis"])

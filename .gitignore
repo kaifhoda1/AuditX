@@ -1,25 +1,34 @@
-# Client data - NEVER commit
-clients/*
-!clients/.gitkeep
+# Virtual environment
+venv/
 
-# Framework PDFs (large files)
-frameworks/*.pdf
+# ChromaDB - contains processed client data
 frameworks/chroma_db/
+chroma_db/
 
-# Models (too large for GitHub)
-models/*
+# Client uploaded documents - NEVER commit
+clients/
+uploads/
+*.pdf
+!frameworks/*.pdf
 
-# Output reports (contain client info)
-outputs/*
+# Generated reports
+outputs/
+reports/
+
+# Environment variables
+.env
+.env.*
 
 # Python cache
 __pycache__/
 *.pyc
-.env
+*.pyo
+*.pyd
+.Python
 
-# Virtual environment
-venv/
-
-# System files
+# OS files
 .DS_Store
-*.log
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
