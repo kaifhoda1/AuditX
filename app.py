@@ -321,7 +321,7 @@ st.markdown("""
         <div class="stat-label">Frameworks</div>
     </div>
     <div class="stat-box green">
-        <div class="stat-val">3342</div>
+        <div class="stat-val">3602</div>
         <div class="stat-label">Knowledge Chunks</div>
     </div>
     <div class="stat-box amber">
