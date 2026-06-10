@@ -33,3 +33,4 @@ Thumbs.db
 # Streamlit
 .streamlit/secrets.toml
 test_*.txt
+frameworks/*.pdf
