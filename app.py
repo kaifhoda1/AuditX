@@ -1,5 +1,6 @@
 import streamlit as st
 from auth import check_auth
+from database import save_audit, get_all_audits, get_audit_stats, get_client_audits
 check_auth()
 import tempfile
 import os
@@ -315,6 +316,16 @@ if use_eu_ai: selected_frameworks.append("eu_ai_act")
 if use_nist: selected_frameworks.append("nist")
 if use_rbi: selected_frameworks.append("rbi_digital")
 
+# Audit History
+stats = get_audit_stats()
+if stats['total_audits'] > 0:
+    st.markdown('<div class="section-label">Audit History</div>', unsafe_allow_html=True)
+    audits = get_all_audits()
+    import pandas as pd
+    df = pd.DataFrame(audits, columns=['ID','Client','Overall Score','Risk','Frameworks','Report','PDF','Word','Date'])
+    df = df[['Client','Overall Score','Risk','Date']]
+    st.dataframe(df, use_container_width=True)
+
 # Stats
 st.markdown("""
 <div class="stats-grid">
@@ -323,16 +334,16 @@ st.markdown("""
         <div class="stat-label">Frameworks</div>
     </div>
     <div class="stat-box green">
-        <div class="stat-val">3602</div>
-        <div class="stat-label">Knowledge Chunks</div>
+        <div class="stat-val">0</div>
+        <div class="stat-label">Total Audits</div>
     </div>
     <div class="stat-box amber">
-        <div class="stat-val">100%</div>
-        <div class="stat-label">Local Processing</div>
+        <div class="stat-val">0</div>
+        <div class="stat-label">Clients Audited</div>
     </div>
     <div class="stat-box slate">
         <div class="stat-val">0</div>
-        <div class="stat-label">Data Exfiltration</div>
+        <div class="stat-label">Avg Score</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
