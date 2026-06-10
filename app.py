@@ -6,6 +6,8 @@ from core.analyzer import analyze_policy
 from core.scorer import score_all, overall_score
 from core.reporter import build_report, save_report
 from core.pdf_reporter import generate_pdf_report
+from core.word_reporter import generate_word_report
+from core.visualizer import create_risk_heatmap
 
 st.set_page_config(
     page_title="AuditX — GRC Compliance",
@@ -400,6 +402,11 @@ if uploaded_file and selected_frameworks and company_name:
         scores_html += '</div>'
         st.markdown(scores_html, unsafe_allow_html=True)
 
+        # Risk Heatmap
+        st.markdown('<div class="section-label">Risk Heatmap</div>', unsafe_allow_html=True)
+        fig = create_risk_heatmap(scored)
+        st.plotly_chart(fig, use_container_width=True)
+
         # Analysis
         st.markdown('<div class="section-label">Detailed Analysis</div>',
                    unsafe_allow_html=True)
@@ -444,6 +451,16 @@ if uploaded_file and selected_frameworks and company_name:
                     data=f.read(),
                     file_name=os.path.basename(pdf_path),
                     mime="application/pdf"
+                )
+        col3, col4 = st.columns(2)
+        with col3:
+            word_path = generate_word_report(scored, overall, company_name)
+            with open(word_path, "rb") as f:
+                st.download_button(
+                    label="DOWNLOAD WORD REPORT",
+                    data=f.read(),
+                    file_name=os.path.basename(word_path),
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 )
 
 elif uploaded_file and not company_name:
