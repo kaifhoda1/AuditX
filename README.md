@@ -1,53 +1,85 @@
-# 🔐 AuditX — AI-Powered GRC Compliance Tool
-**By ByteFortix Security**
+# AuditX
+### Private GRC Intelligence Platform
 
-AuditX is a fully local, offline AI-powered GRC compliance analysis tool.
-It analyzes company policy documents against major regulatory frameworks
-and generates gap reports, compliance scores, and fix recommendations.
+**ByteFortix Security**
 
-## Frameworks Supported
-- DPDP Act 2023 + Rules 2025 (India)
-- GDPR (EU)
-- EU AI Act 2024
-- NIST SP 800-53 Rev 5
-- RBI Digital Payment Security Controls
+---
 
-## Features
-- Upload PDF or TXT policy documents
-- Compliance scoring (0-100) per framework
-- Gap analysis with specific fix recommendations
-- Downloadable audit reports
-- 100% local processing — no data leaves your machine
-- Powered by Mistral 7B via Ollama
+AuditX is an AI-powered compliance analysis platform that audits company policy documents against major regulatory frameworks and delivers professional gap reports with exact legal citations, penalty references, and prioritized fix recommendations.
 
-## Tech Stack
-- Python 3.10
-- Streamlit (UI)
-- ChromaDB (local vector database)
-- Ollama + Mistral 7B (LLM)
-- PyMuPDF (PDF extraction)
+All processing is local. No data leaves the operator's machine.
 
-## Setup
+---
 
-```bash
-git clone https://github.com/kaifhoda1/AuditX.git
-cd AuditX
-python3 -m venv venv
-source venv/bin/activate
-pip install pymupdf chromadb ollama streamlit python-dotenv
-python3 core/ingestor.py
-streamlit run app.py --server.headless true
-```
+## What It Does
+
+AuditX accepts a company's policy document and produces a structured compliance audit covering:
+
+- Compliance score per framework (0-100)
+- Passed and failed checks with exact article citations
+- Gap analysis with applicable penalty references
+- Prioritized remediation plan
+- Downloadable PDF and Word audit report
+
+---
+
+## Frameworks
+
+| Framework | Coverage |
+|---|---|
+| DPDP Act 2023 + Rules 2025 | Full text — 277 chunks |
+| GDPR (EU) | Full text — 452 chunks |
+| EU AI Act 2024 | Full text — 750 chunks |
+| NIST SP 800-53 Rev 5 | Full text — 2065 chunks |
+| RBI Digital Payment Security Controls | Full text — 58 chunks |
+
+---
+
+## Architecture
+
+- Local LLM inference via Ollama (Mistral 7B)
+- Vector search via ChromaDB
+- RAG pipeline grounded in official framework documents
+- Zero cloud dependency — no API keys, no external calls
+- Air-gapped compatible
+
+---
+
+## Reports
+
+Every audit generates three downloadable formats:
+
+- PDF report — branded, client-ready
+- Word document — editable, structured gap analysis
+- TXT report — plain text for internal records
+
+---
+
+## Security
+
+- Login protected
+- Credentials managed via environment variables
+- Client documents processed in memory — not stored permanently
+- ChromaDB and outputs excluded from version control
+
+---
+
+## Status
+
+Active development. Currently in private beta testing with select clients.
+
+---
 
 ## Contact
-**ByteFortix Security**
+
+ByteFortix Security
 kaifhoda1@gmail.com
 github.com/kaifhoda1
 
-## Disclaimer
-DRAFT outputs only. Not legal advice.
-Always verify findings with a qualified compliance professional.
+---
 
 ## License
-Proprietary — ByteFortix Security © 2026. All rights reserved.
+
+Proprietary — ByteFortix Security 2026. All rights reserved.
 Unauthorized use, copying, or distribution is prohibited.
+For licensing inquiries contact kaifhoda1@gmail.com
