@@ -7,6 +7,8 @@ MODEL = "mistral"
 
 FRAMEWORK_NAMES = {
     "dpdp": "Digital Personal Data Protection Act 2023 & Rules 2025 (India)",
+    "dpdp_act": "Digital Personal Data Protection Act 2023 (Full Text)",
+    "dpdp_rules": "Digital Personal Data Protection Rules 2025 (Full Text)",
     "gdpr": "General Data Protection Regulation (GDPR)",
     "eu_ai_act": "EU Artificial Intelligence Act 2024",
     "nist": "NIST Special Publication 800-53 Rev 5",

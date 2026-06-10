@@ -4,6 +4,8 @@ import os
 
 FRAMEWORKS = {
     "dpdp": "frameworks/doc20251117695301.pdf",
+    "dpdp_act": "frameworks/dpdp_act_2023.pdf",
+    "dpdp_rules": "frameworks/dpdp_rules_2025.pdf",
     "gdpr": "frameworks/CELEX_32016R0679_EN_TXT.pdf",
     "eu_ai_act": "frameworks/eu_ai_act.pdf",
     "nist": "frameworks/NIST.SP.800-53r5.pdf",
