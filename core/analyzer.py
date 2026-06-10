@@ -42,7 +42,7 @@ def analyze_policy(policy_text, frameworks):
         if not context:
             results[framework] = {"framework_name": framework_name, "error": "No framework data found."}
             continue
-        prompt = f"""You are AuditX, a professional GRC compliance analysis tool built by ByteFortix Security.
+        prompt = f"""You are AuditX, a strict professional GRC compliance analysis tool built by ByteFortix Security. Be rigorous and conservative in scoring. A policy missing consent mechanism, DPO, breach notification, retention period, or security measures cannot score above 50. Score based on what is explicitly present in the policy, not what is implied.
 
 SYSTEM RULES:
 {constitution}
