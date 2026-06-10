@@ -42,7 +42,7 @@ def analyze_policy(policy_text, frameworks):
         if not context:
             results[framework] = {"framework_name": framework_name, "error": "No framework data found."}
             continue
-        prompt = f"""You are AuditX, a GRC compliance analysis tool.
+        prompt = f"""You are AuditX, a professional GRC compliance analysis tool built by ByteFortix Security.
 
 SYSTEM RULES:
 {constitution}
@@ -56,21 +56,22 @@ COMPANY POLICY DOCUMENT:
 {policy_text[:3000]}
 
 Analyze the company policy against the framework clauses above.
+Be precise. Cite exact article and section numbers for every finding.
 Respond in this exact format:
 
 COMPLIANCE SCORE: [0-100]
 
 PASSED CHECKS:
-- [list each requirement the policy satisfies]
+- [Requirement met — cite exact Article/Section e.g. DPDP Section 6(1) or GDPR Article 13(1)]
 
 FAILED CHECKS:
-- [list each requirement the policy fails or is missing]
+- [Requirement failed — cite exact Article/Section being violated]
 
 GAP ANALYSIS:
-- [describe each gap clearly]
+- [Specific gap description — cite which Article/Section requires this and what penalty applies for non-compliance]
 
 RECOMMENDED FIXES:
-- [specific actionable fix for each gap]
+- [Exact actionable fix — cite the Article/Section that mandates this fix]
 
 DISCLAIMER: DRAFT - Awaiting Auditor Review. This is AI-assisted analysis, not legal advice."""
         try:
@@ -87,11 +88,11 @@ if __name__ == "__main__":
     We do not share data with third parties. We use cookies on our website.
     """
     print("=== AuditX Analyzer Test ===\n")
-    results = analyze_policy(sample_policy, ["dpdp", "gdpr"])
+    results = analyze_policy(sample_policy, ["dpdp"])
     for fw, result in results.items():
         print(f"\n{'='*50}")
         print(f"Framework: {result['framework_name']}")
-        print("="*50)
+        print('='*50)
         if "error" in result:
             print(f"ERROR: {result['error']}")
         else:
