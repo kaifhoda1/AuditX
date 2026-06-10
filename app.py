@@ -1,4 +1,6 @@
 import streamlit as st
+from auth import check_auth
+check_auth()
 import tempfile
 import os
 from core.extractor import extract_text
