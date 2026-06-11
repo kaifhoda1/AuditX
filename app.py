@@ -375,6 +375,17 @@ if uploaded_file and selected_frameworks and company_name:
                 if os.path.exists(tmp_path):
                     os.unlink(tmp_path)
 
+        # Document quality check
+        from core.analyzer import check_document_quality
+        quality = check_document_quality(policy_text)
+        if quality["quality"] == "CRITICAL":
+            st.error(f"Document Quality: {quality['message']}")
+            st.stop()
+        elif quality["quality"] == "WARNING":
+            st.warning(f"Document Quality Warning: {quality['message']}")
+        elif quality["quality"] == "NOTICE":
+            st.info(f"Document Notice: {quality['message']}")
+
         with st.spinner(f"Analyzing against {len(selected_frameworks)} framework(s)..."):
             try:
                 results = analyze_policy(policy_text, selected_frameworks)

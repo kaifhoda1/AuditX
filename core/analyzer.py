@@ -35,6 +35,18 @@ def retrieve_context(query, framework, n_results=5):
     chunks = results["documents"][0] if results["documents"] else []
     return "\n\n---\n\n".join(chunks)
 
+def check_document_quality(policy_text: str) -> dict:
+    word_count = len(policy_text.split())
+    char_count = len(policy_text)
+    if word_count < 50:
+        return {"quality": "CRITICAL", "message": f"Document too short ({word_count} words). Minimum 50 words required for meaningful analysis."}
+    elif word_count < 200:
+        return {"quality": "WARNING", "message": f"Document is very short ({word_count} words). Analysis may be incomplete. A proper policy should be at least 500 words."}
+    elif word_count < 500:
+        return {"quality": "NOTICE", "message": f"Document is short ({word_count} words). Consider providing a more detailed policy for thorough analysis."}
+    else:
+        return {"quality": "OK", "message": f"Document length acceptable ({word_count} words)."}
+
 def analyze_policy(policy_text, frameworks):
     constitution = load_constitution()
     results = {}
@@ -64,6 +76,12 @@ COMPANY POLICY DOCUMENT:
 
 Analyze the company policy against the framework clauses above.
 Be precise. Cite exact article and section numbers for every finding.
+Classify every failed check by severity:
+- CRITICAL: violation carries penalty above INR 100 crore or exposes sensitive data
+- HIGH: violation carries penalty above INR 50 crore or affects data subject rights
+- MEDIUM: violation affects compliance posture but lower penalty
+- LOW: minor gap, best practice recommendation
+
 Respond in this exact format:
 
 COMPLIANCE SCORE: [0-100]
@@ -72,13 +90,13 @@ PASSED CHECKS:
 - [Requirement met — cite exact Article/Section e.g. DPDP Section 6(1) or GDPR Article 13(1)]
 
 FAILED CHECKS:
-- [Requirement failed — cite exact Article/Section being violated]
+- [CRITICAL/HIGH/MEDIUM/LOW] [Requirement failed — cite exact Article/Section being violated]
 
 GAP ANALYSIS:
-- [Specific gap description — cite which Article/Section requires this and what penalty applies for non-compliance]
+- [CRITICAL/HIGH/MEDIUM/LOW] [Specific gap — cite Article/Section and exact penalty amount]
 
 RECOMMENDED FIXES:
-- [Exact actionable fix — cite the Article/Section that mandates this fix]
+- [Priority 1/2/3] [Exact actionable fix — cite Article/Section] [Timeline: immediate/2 weeks/1 month]
 
 DISCLAIMER: DRAFT - Awaiting Auditor Review. This is AI-assisted analysis, not legal advice."""
         try:
