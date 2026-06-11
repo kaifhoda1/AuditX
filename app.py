@@ -9,6 +9,7 @@ from core.analyzer import analyze_policy
 from core.scorer import score_all, overall_score
 from core.reporter import build_report, save_report
 from core.pdf_reporter import generate_pdf_report
+from core.certificate import generate_certificate
 from core.word_reporter import generate_word_report
 from core.visualizer import create_risk_heatmap
 
