@@ -67,8 +67,11 @@ def get_section_reference(section_num):
 
 def get_reference_context():
     """Returns a formatted reference guide for the LLM prompt."""
-    lines = ["DPDP ACT 2023 — EXACT SECTION REFERENCE (use these citations only):"]
+    # Only include sections relevant to Data Fiduciary obligations
+    relevant_sections = ["2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","24","25"]
+    lines = ["DPDP ACT 2023 — DATA FIDUCIARY OBLIGATIONS (cite ONLY these sections for company/clinic audits):"]
     for num, title in DPDP_SECTIONS.items():
+        if num not in relevant_sections: continue
         penalty = DPDP_PENALTIES.get(num, "")
         line = f"Section {num}: {title}"
         if penalty:
