@@ -1,6 +1,9 @@
 import ollama
 import chromadb
 import os
+import sys, os as _os
+sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+from core.dpdp_reference import get_reference_context
 
 CHROMA_PATH = "chroma_db"
 MODEL = "mistral"
@@ -42,6 +45,7 @@ def analyze_policy(policy_text, frameworks):
         if not context:
             results[framework] = {"framework_name": framework_name, "error": "No framework data found."}
             continue
+        dpdp_ref = get_reference_context() if "dpdp" in framework else ""
         prompt = f"""You are AuditX, a strict professional GRC compliance analysis tool built by ByteFortix Security. Be rigorous and conservative in scoring. A policy missing consent mechanism, DPO, breach notification, retention period, or security measures cannot score above 50. Score based on what is explicitly present in the policy, not what is implied.
 
 SYSTEM RULES:
@@ -51,6 +55,9 @@ FRAMEWORK: {framework_name}
 
 RELEVANT FRAMEWORK CLAUSES:
 {context}
+
+DPDP EXACT SECTION REFERENCE — ONLY USE THESE SECTION NUMBERS FOR DPDP CITATIONS:
+{dpdp_ref}
 
 COMPANY POLICY DOCUMENT:
 {policy_text[:3000]}
