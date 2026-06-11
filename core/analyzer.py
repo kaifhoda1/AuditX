@@ -58,7 +58,7 @@ def analyze_policy(policy_text, frameworks):
             results[framework] = {"framework_name": framework_name, "error": "No framework data found."}
             continue
         dpdp_ref = get_reference_context() if "dpdp" in framework else ""
-        prompt = f"""You are AuditX, a strict professional GRC compliance analysis tool built by ByteFortix Security. Be rigorous and conservative in scoring. A policy missing consent mechanism, DPO, breach notification, retention period, or security measures cannot score above 50. Score based on what is explicitly present in the policy, not what is implied.
+        prompt = f"""You are AuditX, a professional GRC compliance analysis tool built by ByteFortix Security. Score fairly and accurately. A detailed policy with rights section, grievance officer, retention policy and security measures should score 60-80. A basic 5-line policy should score 20-40. Score based on what is explicitly present. Do not penalize for missing government/board sections — only evaluate Data Fiduciary obligations.
 
 SYSTEM RULES:
 {constitution}
